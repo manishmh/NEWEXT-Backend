@@ -3,7 +3,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema({
-    name: {
+    fname: {
+        type: String,
+        required: true,
+        min: [3, "Name must contain 3 letters"]
+    },
+    lname: {
         type: String,
         required: true,
         min: [3, "Name must contain 3 letters"]
@@ -22,12 +27,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         min: [5, "min length 5 required"]
-    },
-    phone: {
-        type: String,
-        required: true,
-        min: [10, "number must be of minimum 10 numbers"],
-        unique: [true, "Phone number is already present"]
     },
     tokens: [{
         token: {
@@ -52,6 +51,19 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.methods.generateAuthToken = async function () {
+    try {
+        const user = this
+        const token = jwt.sign({ _id: user._id.toString() }, process.env.SECRET_KEY);
+        user.tokens = user.tokens.concat({ token })
+        await this.save();
+        return token;
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// securing password
 userSchema.pre("save", async function (next) {
     if (this.isModified("password")) {
         this.password = await bcrypt.hash(this.password, 10);
@@ -59,6 +71,6 @@ userSchema.pre("save", async function (next) {
     next();
 });
 
-const user = new mongoose.model("NewexrUser", userSchema);
+const NewextUser = new mongoose.model("NewexrUser", userSchema);
 
-module.exports = user;
+module.exports = NewextUser;

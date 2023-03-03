@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const validator = require("validator");
 
 const userSchema = new mongoose.Schema({
     fname: {
@@ -27,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         min: [5, "min length 5 required"]
+    },
+    badgeImg: {
+        type: String,
+        required: true,
     },
     tokens: [{
         token: {

@@ -4,17 +4,19 @@ const inshorts = require('inshorts-news-api');
 
 router.get("/getnews", (req, res) => {
 
-    const { len, categories } = req.body;
+    const { lang, category } = req.body;
 
-    var options = {
-        lang: len,
-        category: categories
-        // lang: 'en',
-        // category: ''
+    try {
+        var options = {
+            lang: lang,
+            category: category
+        }
+        inshorts.getNews(options, function (result) {
+            res.send(result).status(201);
+        });
+    } catch (error) {
+        res.send(error);
     }
-    inshorts.getNews(options, function (result, news_offset) {
-        res.send(result);
-    });
 });
 
 module.exports = router;

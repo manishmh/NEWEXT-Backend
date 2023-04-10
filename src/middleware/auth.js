@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const DiagnosisUser = require("../modals/newUser");
+const NewextUser = require("../modals/newUser");
 require("dotenv").config();
 
 const auth = async (req, res, next) => {
@@ -7,7 +7,7 @@ const auth = async (req, res, next) => {
         const token = req.cookies.jwt;
         const verifyUser = jwt.verify(token, process.env.SECRET_KEY);
 
-        const user = await DiagnosisUser.findOne({ _id: verifyUser._id });
+        const user = await NewextUser.findOne({ _id: verifyUser._id });
 
         req.token = token;
         req.user = user;

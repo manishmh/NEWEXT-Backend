@@ -7,6 +7,8 @@ const userRouter = require("./routers/user");
 const newsRouter = require("./routers/news");
 const weatherRouter = require("./routers/weather");
 const stockRouter = require("./routers/stock");
+const chatRouter = require("./routers/chat");
+const messageRouter = require("./routers/message");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -22,6 +24,8 @@ app.use(userRouter);
 app.use("/news", newsRouter);
 app.use("/weather", weatherRouter);
 app.use("/stocks", stockRouter);
+app.use("/chats", chatRouter);
+app.use("/messages", messageRouter);
 
 app.listen(port, () => {
     console.log(`Connected to port ${port}`);

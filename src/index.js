@@ -29,6 +29,26 @@ app.use("/stocks", stockRouter);
 app.use("/chats", chatRouter);
 app.use("/messages", messageRouter);
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Connected to port ${port}`);
 });
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+  }
+})
+
+const users = [{}];
+
+io.on("connection", (socket) => {
+  socket.on("joined", ({ user }) => {
+    users[socket.id] = user;
+    socket.emit("welcome", { message: `Welcome to the chat ${users[socket.id]}` })
+  })
+
+  socket.on("message", ({ message, id }) => {
+    io.emit("sendMessage", { user: users[id], message, id })
+  });
+})
